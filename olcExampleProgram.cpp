@@ -2,6 +2,8 @@
 #include "olcPixelGameEngine.h"
 #include <thread>
 
+#define N_THREADS 12
+#define DEEP_ZOOM false
 
 class Example : public olc::PixelGameEngine
 {
@@ -74,26 +76,15 @@ public:
 		double yItrVal = (yHigh - yLow) / ScreenHeight();
 
 		//drawRow(0, 1, xItrVal, yItrVal, xLow, yLow);
-		const int nThreads = 12;
-		std::thread* threads[nThreads];
-		for (int i = 0; i < nThreads; i++) {
-			threads[i] = new std::thread(threadDrawRow, this, i, nThreads, xItrVal, yItrVal, xLow, yLow, invZoom);
+		std::thread* threads[N_THREADS];
+		for (int i = 0; i < N_THREADS; i++) {
+			threads[i] = new std::thread(threadDrawRow, this, i, N_THREADS, xItrVal, yItrVal, xLow, yLow, invZoom);
 		}
 
-		for (int i = 0; i < nThreads; i++) {
+		for (int i = 0; i < N_THREADS; i++) {
 			threads[i]->join();
 			delete threads[i];
 		}
-		
-		/*for (int x = 0; x < ScreenWidth(); x++) {
-			for (int y = 0; y < ScreenHeight(); y++) {
-				double x0 = xLow + x * xItrVal;
-				double y0 = yLow + y * yItrVal;
-
-				drawMandelBrotPixel(x, y, x0, y0);
-			}
-		}*/
-
 	}
 
 public:
@@ -106,7 +97,7 @@ public:
 	{
 		// Called once at the start, so create things here
 		static double zoom = 0.25;
-		static double camPos[2]{ 0.36024044343761436323612, -0.6413130610648031748603750151793020665 };
+		static double camPos[2]{ 0.023323, 0.813299 };
 		drawMandlebrot(camPos, zoom);
 		return true;
 	}
@@ -115,10 +106,9 @@ public:
 	{
 		static double zoom = 0.25;
 		static double camPos[2]{ -1.785940, 0.000344};
-		static bool freeZoom = false;
 		bool lclick = GetMouse(0).bPressed;
 		bool rclick = GetMouse(1).bPressed;
-		if (freeZoom) {
+		if (DEEP_ZOOM) {
 			zoom += fElapsedTime * zoom / 10;
 			drawMandlebrot(camPos, zoom);
 		}
