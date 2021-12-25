@@ -8,34 +8,34 @@
 class Example : public olc::PixelGameEngine
 {
 public:
-	double camPos[2] = { 0, 0 };
-	double defaultBounds[4] = { -2.5, 1, -1, 1 };
+	long double camPos[2] = { 0, 0 };
+	long double defaultBounds[4] = { -2.5, 1, -1, 1 };
 	
-	static void threadDrawRow(void* obj, int y, int interval, double xItrVal, double yItrVal, double xLow, double yLow, double invZoom) {
+	static void threadDrawRow(void* obj, int y, int interval, long double xItrVal, long double yItrVal, long double xLow, long double yLow, long double invZoom) {
 		((Example* )obj)->drawRow(y, interval, xItrVal, yItrVal, xLow, yLow, invZoom);
 	}
 
-	void drawRow(int y, int interval, double xItrVal, double yItrVal, double xLow, double yLow, double invZoom) {
+	void drawRow(int y, int interval, long double xItrVal, long double yItrVal, long double xLow, long double yLow, long double invZoom) {
 		while (y < ScreenHeight()) {
-			double y0 = yLow + y * yItrVal;
+			long double y0 = yLow + y * yItrVal;
 			for (int x = 0; x < ScreenWidth(); x++) {
-				double x0 = xLow + x * xItrVal;
+				long double x0 = xLow + x * xItrVal;
 				drawMandelBrotPixel(x, y, x0, y0, invZoom);
 			}
 			y += interval;
 		}
 	}
 
-	void drawMandelBrotPixel(int x, int y, double x0, double y0, double invZoom) {
-		double a = x0;
-		double b = y0;
+	void drawMandelBrotPixel(int x, int y, long double x0, long double y0, long double invZoom) {
+		long double a = x0;
+		long double b = y0;
 		double maxItr = 1500;
 		int i = 0;
 		double divBound = 4;
 
 		while (a * a + b * b <= divBound && i < maxItr) {
 			i++;
-			double temp = a * a - b * b;
+			long double temp = a * a - b * b;
 			b = 2 * a * b + y0;
 			a = temp + x0;
 		}
@@ -64,16 +64,16 @@ public:
 		Draw(x, y, olc::Pixel(r * 255, g * 255, blu * 255));
 	}
 
-	void drawMandlebrot(double camPos[2], double zoom) {
-		double invZoom = 1 / zoom;
+	void drawMandlebrot( long double camPos[2], long double zoom) {
+		long double invZoom = 1 / zoom;
 
-		double xLow = camPos[0] + defaultBounds[0] * invZoom;
-		double xHigh = camPos[0] + defaultBounds[1] * invZoom;
-		double yLow = camPos[1] + defaultBounds[2] * invZoom;
-		double yHigh = camPos[1] + defaultBounds[3] * invZoom;
+		long double xLow = camPos[0] + defaultBounds[0] * invZoom;
+		long double xHigh = camPos[0] + defaultBounds[1] * invZoom;
+		long double yLow = camPos[1] + defaultBounds[2] * invZoom;
+		long double yHigh = camPos[1] + defaultBounds[3] * invZoom;
 
-		double xItrVal = (xHigh - xLow) / ScreenWidth();
-		double yItrVal = (yHigh - yLow) / ScreenHeight();
+		long double xItrVal = (xHigh - xLow) / ScreenWidth();
+		long double yItrVal = (yHigh - yLow) / ScreenHeight();
 
 		//drawRow(0, 1, xItrVal, yItrVal, xLow, yLow);
 		std::thread* threads[N_THREADS];
@@ -96,16 +96,16 @@ public:
 	bool OnUserCreate() override
 	{
 		// Called once at the start, so create things here
-		static double zoom = 0.25;
-		static double camPos[2]{ 0.023323, 0.813299 };
+		static long double zoom = 0.25;
+		static long double camPos[2]{ 0.023323, 0.813299 };
 		drawMandlebrot(camPos, zoom);
 		return true;
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		static double zoom = 0.25;
-		static double camPos[2]{ -1.785940, 0.000344};
+		static long double zoom = 0.25;
+		static long double camPos[2]{ 0.023323, 0.813299 };
 		bool lclick = GetMouse(0).bPressed;
 		bool rclick = GetMouse(1).bPressed;
 		if (DEEP_ZOOM) {
@@ -115,12 +115,12 @@ public:
 		if (lclick || rclick) {
 			
 			if (lclick) {
-				double invZoom = 1 / zoom;
+				long double invZoom = 1 / zoom;
 
-				double xLow = camPos[0] + defaultBounds[0] * invZoom;
-				double xHigh = camPos[0] + defaultBounds[1] * invZoom;
-				double yLow = camPos[1] + defaultBounds[2] * invZoom;
-				double yHigh = camPos[1] + defaultBounds[3] * invZoom;
+				long double xLow = camPos[0] + defaultBounds[0] * invZoom;
+				long double xHigh = camPos[0] + defaultBounds[1] * invZoom;
+				long double yLow = camPos[1] + defaultBounds[2] * invZoom;
+				long double yHigh = camPos[1] + defaultBounds[3] * invZoom;
 
 				camPos[0] = xLow + ((xHigh - xLow) * GetMouseX()) / (ScreenWidth());
 				camPos[1] = yLow + ((yHigh - yLow) * GetMouseY()) / (ScreenHeight());
