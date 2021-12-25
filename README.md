@@ -7,4 +7,6 @@ To make it run a bit faster I made it use multiple cpu threads. I just hardcoded
 
 setting DEEP_ZOOM to true will make it automatically zoom in the coordinate defined in onUserUpdate()
 
+Click to view a demo on my Youtube channel:
+
 [![Gameplay](https://img.youtube.com/vi/DtTY8uucYuw/0.jpg)](https://www.youtube.com/watch?v=DtTY8uucYuw)
